@@ -1,2 +1,0 @@
-delta_core/_core.cpython-311-x86_64-linux-gnu.so
-delta_core/libqpdf.so
