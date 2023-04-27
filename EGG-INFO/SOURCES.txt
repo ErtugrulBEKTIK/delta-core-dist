@@ -1,0 +1,10 @@
+README.rst
+setup.py
+delta_core/__init__.py
+delta_core/_core.pyi
+delta_core.egg-info/PKG-INFO
+delta_core.egg-info/SOURCES.txt
+delta_core.egg-info/dependency_links.txt
+delta_core.egg-info/not-zip-safe
+delta_core.egg-info/requires.txt
+delta_core.egg-info/top_level.txt
