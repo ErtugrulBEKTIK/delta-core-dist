@@ -6,5 +6,11 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     zip_safe=False,
     package_data={'': ['*.pyi', '*.so']},
-    include_package_data=True
+    include_package_data=True,
+    install_requires=[ 
+        "Pillow>=9.0",
+        "deprecation",
+        "lxml>=4.8",
+        "packaging"
+    ]
 )
