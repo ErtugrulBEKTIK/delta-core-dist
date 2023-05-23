@@ -12,6 +12,8 @@ from typing import (
     List
 )
 
+from pikepdf import ContentStreamInstruction
+
 if sys.version_info >= (3, 8):
     from typing import Literal
 else:
@@ -92,6 +94,20 @@ class GraphicsState:
     overprint_mode: int
     def clone(self) -> GraphicsState: ...
 
+class PathSegment:
+
+    class Type(Enum):
+        MOVE_TO = 1
+        LINE_TO = 2
+        CURVE_TO = 3
+        V_CURVE_TO = 4
+        Y_CURVE_TO = 5
+        CLOSE_PATH = 6
+
+    def __init__(self, type) -> None: ...
+    type: Type
+    points: list[Point]
+
 class GraphicsObject:
 
     class Type(Enum):
@@ -119,6 +135,8 @@ class GraphicsObject:
     XObject: any
     def get_bounding_box(self) -> list[float]: ...
     def get_contour(self, tolerance: float = 1.0) -> list[Point]: ...
+    def get_path_segments(self) -> list[PathSegment]: ...
+    def get_path_instructions(self) -> list[ContentStreamInstruction]: ...
     def is_visible(self) -> bool: ...
     def is_stroked(self) -> bool: ...
     def is_filled(self) -> bool: ...
@@ -153,27 +171,6 @@ class ContentObjectBuilder:
     marked_contents: list[MarkedContent]
     page: Page
     def run(self) -> None: ...
-
-"""
- py::class_<Point>(m, "Point", "2D Point")
-      .def(py::init<int, int>(), py::arg("x"), py::arg("y"))
-      //.def_property_readonly("x", &Point::X)
-      .def_property_readonly("x", [](const Point& p) { return p.X; })
-      .def_property_readonly("y", [](const Point& p) { return p.Y; })
-      .def(
-          "__repr__",
-          [](const Point& p) {
-            std::string r("Point(");
-            r += boost::lexical_cast<std::string>(p.X);
-            r += ", ";
-            r += boost::lexical_cast<std::string>(p.Y);
-            r += ")";
-            return r;
-          }
-      )
-      .def("__eq__", [](const Point& p, const Point& q) { return p == q; });
-
-"""
 
 class NestPoint:
     def __init__(self, x: int, y: int) -> None: ...
@@ -283,7 +280,7 @@ class NestRectangle(NestItem):
     def height(self) -> int: ...
 
 
-class NestInput(list): ...
+class NestInput(List[NestItem]): ...
 
 def nest(input: NestInput, box: NestBox, dist: int = 0) -> int: ...
 
